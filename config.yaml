@@ -1,20 +1,51 @@
-port: 7890
-socks-port: 7891
-redir-port: 7892
-allow-lan: true
-mode: Rule
-log-level: info
-#external-controller: 127.0.0.1:9090
+# 系统参数
+port: 7890                                       # HTTP代理端口
+socks-port: 7891                                 # SOCKS代理端口
+redir-port: 7892                                 # 透明代理端口（for Linux or MacOS）
+allow-lan: true                                  # 允许局域网连接
+mode: Rule    #Rule or Script                    # 工作模式（有Global全局，Rule规则，Direct直连,Script脚本）
+log-level: info                                  # 日志级别（info / warning / error / debug / silent）
+ipv6: false                                      # 假
+external-controller: 0.0.0.0:9090                # 外部控制面板监听端口
+#external-ui: dashboard                           # 外部控制面板仪表板
+secret: "6651323"                                # 此处为打开9090/ui的登录密码，请自行修改！
+interface-name: br0                              # ip a 查看接口名称，确认一致 
+
+
+# 实验性功能
+experimental:
+  ignore-resolve-fail: true
+
+# TUN设置
+tun:
+  enable: true         
+  stack: gvisor
+
+# DNS设置  
 dns:
   enable: true
   ipv6: false
-  listen: 0.0.0.0:53
-  enhanced-mode: fake-ip
-  nameserver:
-    - 119.29.29.29
-    - 114.114.114.114
+  listen: 0.0.0.0:53                            # DNS监听端口！！！clash下，此处不能改，切记！！！！
+  # DNS解析模式（redir-host # or fake-ip），这里重点解释一下：
+  # redir-host为真实IP模式，需要设置nameserver（国内）和fallback（国外）两组DNS，当设备发起DNS请求，CLASH会同时向两组里面所有服务器发起请求，然后首先拿nameserver中最快返回的结果去匹配规则，使用GEOIP判断此IP的所属区域，如果属于国内（CN）或保留地址则直接响应给客户端，其他情况则把fallback中的结果响应给客户端
+  # fake-ip则相反，当clash收到请求，会直接返回一个198.18.0.1/16的假IP给设备，同时 Clash 继续解析域名规则和 IP 规则，而且如果 Clash DNS 匹配到了域名规则、则不需要向上游 DNS 请求，Clash 已经可以直接将连接发给代理服务器，节省了 Clash DNS 向上游 DNS 请求解析
+  default-nameserver:
     - 223.5.5.5
-experimental:
-  interface-name: br0
-tun:
-  enable: true
+    - 8.8.8.8
+  enhanced-mode: fake-ip                         # 理论上来说，fake-ip具有更好的响应速度跟抗污染能力（主要还得看规则）。由于灯塔提前分流了国内外流量，国内流量不经过clash，所以选择fake-ip可以得到更好的效果，当然，还是得看规则完不完整。有需要返回真实IP的可以选择redir-host，老实说两种DNS模式在实际体验中差别不大
+  fake-ip-range: 198.19.0.1/16                   # ip范围
+  fake-ip-filter:                                # fake-ip白名单，对于有需要返回真实IP又想用fake-ip的，可参照以下格式把域名加进去
+    - '+.yly-studio.in'
+    - yuanlam.8800.org  
+    - msftconnecttest.com
+    - "*.msftconnecttest.com"
+    - msftncsi.com
+    - "*.msftncsi.com"
+    - '.lan'
+    - localhost.ptlogin2.qq.com    
+    - '.srv.nintendo.net'   
+    - '.stun.playstation.net'   
+    - 'xbox.*.microsoft.com'    
+    - '.xboxlive.com'
+  nameserver:                                    # DNS服务器（国内），此处建议只填一个速度最快的DNS就可以了
+    - 223.5.5.5
