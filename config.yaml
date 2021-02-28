@@ -35,8 +35,6 @@ dns:
   enhanced-mode: fake-ip                         # 理论上来说，fake-ip具有更好的响应速度跟抗污染能力（主要还得看规则）。由于灯塔提前分流了国内外流量，国内流量不经过clash，所以选择fake-ip可以得到更好的效果，当然，还是得看规则完不完整。有需要返回真实IP的可以选择redir-host，老实说两种DNS模式在实际体验中差别不大
   fake-ip-range: 198.19.0.1/16                   # ip范围
   fake-ip-filter:                                # fake-ip白名单，对于有需要返回真实IP又想用fake-ip的，可参照以下格式把域名加进去
-    - '+.yly-studio.in'
-    - yuanlam.8800.org  
     - msftconnecttest.com
     - "*.msftconnecttest.com"
     - msftncsi.com
