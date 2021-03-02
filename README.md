@@ -17,3 +17,7 @@
     `sudo docker run -d --name clash -v 你配置文件的路径/config.yaml:/root/.config/clash/config.yaml --cap-add=NET_ADMIN --device /dev/net/tun --network br0 --ip 192.168.1.4 --privileged lingkai995/clash-tproxy`
 
 1. 将手机/电脑等客户端 网关设置为容器ip,如192.168.1.4 ,dns也设置成这个
+
+
+群晖docker安装请在任务计划里设置开机启动时运行如下命令，并手动运行一次，以安装tun模块
+insmod /lib/modules/tun.ko
