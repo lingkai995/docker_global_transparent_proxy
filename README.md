@@ -6,7 +6,7 @@
 
     `ip link set eth0 promisc on`
 
-1. docker创建网络,注意将网段改为你自己的
+1. docker创建网络,注意将网段（192.168那一段）&网络接口（br0）改为你自己的
 
     `docker network create -d macvlan --subnet=192.168.1.0/24 --gateway=192.168.1.1 -o parent=eth0 br0`
 
