@@ -20,4 +20,4 @@
 
 
 群晖docker安装请在任务计划里设置开机启动时运行如下命令，并手动运行一次，以安装tun模块
-insmod /lib/modules/tun.ko
+`insmod /lib/modules/tun.ko`
